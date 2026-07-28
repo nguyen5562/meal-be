@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+}
+
+model User {
+  id               Int              @id @default(autoincrement())
+  username         String           @unique
+  password         String
+  fullName         String           @map("full_name")
+  role             Role             @default(MANAGER)
+  telegramChatId   String?          @map("telegram_chat_id")
+  createdAt        DateTime         @default(now()) @map("created_at")
+  managerKitchens  ManagerKitchen[]
+
+  @@map("users")
+}
+
+model Kitchen {
+  id              Int              @id @default(autoincrement())
+  name            String
+  location        String?
+  isActive        Boolean          @default(true) @map("is_active")
+  managerKitchens ManagerKitchen[]
+  tables          Table[]
+
+  @@map("kitchens")
+}
+
+model ManagerKitchen {
+  userId    Int     @map("user_id")
+  kitchenId Int     @map("kitchen_id")
+  user      User    @relation(fields: [userId], references: [id])
+  kitchen   Kitchen @relation(fields: [kitchenId], references: [id])
+
+  @@id([userId, kitchenId])
+  @@map("manager_kitchen")
+}
+
+model Table {
+  id          Int          @id @default(autoincrement())
+  kitchenId   Int          @map("kitchen_id")
+  tableName   String       @map("table_name")
+  qrToken     String       @unique @map("qr_token")
+  kitchen     Kitchen      @relation(fields: [kitchenId], references: [id])
+  evaluations Evaluation[]
+
+  @@map("tables")
+}
+
+model Evaluation {
+  id            Int      @id @default(autoincrement())
+  tableId       Int      @map("table_id")
+  evaluatorName String   @map("evaluator_name")
+  unit          String
+  rating        Int
+  feedback      String?  @db.Text
+  createdAt     DateTime @default(now()) @map("created_at")
+  table         Table    @relation(fields: [tableId], references: [id])
+
+  @@map("evaluations")
+}
