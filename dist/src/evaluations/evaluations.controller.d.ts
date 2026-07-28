@@ -5,38 +5,38 @@ export declare class EvaluationsController {
     constructor(evaluationsService: EvaluationsService);
     create(createEvaluationDto: Prisma.EvaluationUncheckedCreateInput): Promise<{
         id: number;
+        createdAt: Date;
         tableId: number;
         evaluatorName: string;
         unit: string;
         rating: number;
         feedback: string | null;
-        createdAt: Date;
     }>;
     findAll(tableId: string | undefined, req: any): Promise<{
         id: number;
+        createdAt: Date;
         tableId: number;
         evaluatorName: string;
         unit: string;
         rating: number;
         feedback: string | null;
-        createdAt: Date;
     }[]>;
     findOne(id: string): Promise<{
         id: number;
+        createdAt: Date;
         tableId: number;
         evaluatorName: string;
         unit: string;
         rating: number;
         feedback: string | null;
-        createdAt: Date;
     } | null>;
     remove(id: string): Promise<{
         id: number;
+        createdAt: Date;
         tableId: number;
         evaluatorName: string;
         unit: string;
         rating: number;
         feedback: string | null;
-        createdAt: Date;
     }>;
 }

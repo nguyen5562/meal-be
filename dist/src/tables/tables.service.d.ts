@@ -8,16 +8,16 @@ export declare class TablesService {
     findOne(id: number): Promise<Table | null>;
     findByToken(qrToken: string): Prisma.Prisma__TableClient<({
         kitchen: {
-            id: number;
             name: string;
-            location: string | null;
+            id: number;
             isActive: boolean;
+            location: string | null;
         };
     } & {
         id: number;
-        qrToken: string;
         kitchenId: number;
         tableName: string;
+        qrToken: string;
     }) | null, null, import("@prisma/client/runtime/client").DefaultArgs, Prisma.PrismaClientOptions>;
     update(id: number, data: Prisma.TableUpdateInput): Promise<Table>;
     remove(id: number): Promise<Table>;

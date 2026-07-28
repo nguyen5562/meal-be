@@ -6,31 +6,31 @@ export declare class KitchensController {
     create(createKitchenDto: Prisma.KitchenCreateInput): Promise<{
         name: string;
         id: number;
-        location: string | null;
         isActive: boolean;
+        location: string | null;
     }>;
     findAll(req: any): Promise<{
         name: string;
         id: number;
-        location: string | null;
         isActive: boolean;
+        location: string | null;
     }[]>;
     findOne(id: string): Promise<{
         name: string;
         id: number;
-        location: string | null;
         isActive: boolean;
+        location: string | null;
     } | null>;
     update(id: string, updateKitchenDto: Prisma.KitchenUpdateInput): Promise<{
         name: string;
         id: number;
-        location: string | null;
         isActive: boolean;
+        location: string | null;
     }>;
     remove(id: string): Promise<{
         name: string;
         id: number;
-        location: string | null;
         isActive: boolean;
+        location: string | null;
     }>;
 }
