@@ -30,8 +30,8 @@ let TablesController = class TablesController {
     create(createTableDto) {
         return this.tablesService.create(createTableDto);
     }
-    findAll(kitchenId) {
-        return this.tablesService.findAll(kitchenId ? +kitchenId : undefined);
+    findAll(kitchenId, req) {
+        return this.tablesService.findAll(kitchenId ? +kitchenId : undefined, req.user);
     }
     findOne(id) {
         return this.tablesService.findOne(+id);
@@ -65,8 +65,9 @@ __decorate([
     (0, roles_decorator_1.Roles)('ADMIN', 'MANAGER'),
     (0, common_1.Get)(),
     __param(0, (0, common_1.Query)('kitchenId')),
+    __param(1, (0, common_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", void 0)
 ], TablesController.prototype, "findAll", null);
 __decorate([

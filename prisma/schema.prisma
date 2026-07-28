@@ -17,6 +17,7 @@ model User {
   password         String
   fullName         String           @map("full_name")
   role             Role             @default(MANAGER)
+  isActive         Boolean          @default(true) @map("is_active")
   telegramChatId   String?          @map("telegram_chat_id")
   createdAt        DateTime         @default(now()) @map("created_at")
   managerKitchens  ManagerKitchen[]

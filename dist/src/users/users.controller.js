@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersController = void 0;
 const common_1 = require("@nestjs/common");
 const users_service_1 = require("./users.service");
-const client_1 = require("@prisma/client");
 const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
 const roles_guard_1 = require("../auth/roles.guard");
 const roles_decorator_1 = require("../auth/roles.decorator");
@@ -24,8 +23,9 @@ let UsersController = class UsersController {
     constructor(usersService) {
         this.usersService = usersService;
     }
-    create(createUserDto) {
-        return this.usersService.create(createUserDto);
+    create(body) {
+        const { kitchenIds, ...createUserDto } = body;
+        return this.usersService.create(createUserDto, kitchenIds);
     }
     findAll() {
         return this.usersService.findAll();
@@ -33,8 +33,9 @@ let UsersController = class UsersController {
     findOne(id) {
         return this.usersService.findById(+id);
     }
-    update(id, updateUserDto) {
-        return this.usersService.update(+id, updateUserDto);
+    update(id, body) {
+        const { kitchenIds, ...updateUserDto } = body;
+        return this.usersService.update(+id, updateUserDto, kitchenIds);
     }
     remove(id) {
         return this.usersService.remove(+id);

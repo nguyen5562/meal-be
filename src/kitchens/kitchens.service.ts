@@ -10,7 +10,12 @@ export class KitchensService {
     return this.prisma.kitchen.create({ data });
   }
 
-  findAll(): Promise<Kitchen[]> {
+  findAll(user?: any): Promise<Kitchen[]> {
+    if (user && user.role === 'MANAGER') {
+      return this.prisma.kitchen.findMany({
+        where: { managerKitchens: { some: { userId: user.sub } } }
+      });
+    }
     return this.prisma.kitchen.findMany();
   }
 

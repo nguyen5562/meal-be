@@ -54,25 +54,57 @@ let UsersService = class UsersService {
     async findByUsername(username) {
         return this.prisma.user.findUnique({ where: { username } });
     }
-    async create(data) {
+    async create(data, kitchenIds) {
         const salt = await bcrypt.genSalt();
         const hashedPassword = await bcrypt.hash(data.password, salt);
         return this.prisma.user.create({
-            data: { ...data, password: hashedPassword },
+            data: {
+                ...data,
+                password: hashedPassword,
+                managerKitchens: kitchenIds ? {
+                    create: kitchenIds.map(kid => ({ kitchenId: kid }))
+                } : undefined
+            },
         });
     }
     async findAll() {
-        return this.prisma.user.findMany({ select: { id: true, username: true, fullName: true, role: true, telegramChatId: true, createdAt: true } });
+        return this.prisma.user.findMany({
+            select: {
+                id: true,
+                username: true,
+                fullName: true,
+                role: true,
+                isActive: true,
+                telegramChatId: true,
+                createdAt: true,
+                managerKitchens: {
+                    select: {
+                        kitchen: {
+                            select: { id: true, name: true }
+                        }
+                    }
+                }
+            }
+        });
     }
     async findById(id) {
         return this.prisma.user.findUnique({ where: { id } });
     }
-    async update(id, data) {
+    async update(id, data, kitchenIds) {
         if (data.password) {
             const salt = await bcrypt.genSalt();
             data.password = await bcrypt.hash(data.password, salt);
         }
-        return this.prisma.user.update({ where: { id }, data });
+        return this.prisma.user.update({
+            where: { id },
+            data: {
+                ...data,
+                managerKitchens: kitchenIds ? {
+                    deleteMany: {},
+                    create: kitchenIds.map(kid => ({ kitchenId: kid }))
+                } : undefined
+            }
+        });
     }
     async remove(id) {
         return this.prisma.user.delete({ where: { id } });

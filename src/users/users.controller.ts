@@ -12,8 +12,9 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserDto: Prisma.UserCreateInput) {
-    return this.usersService.create(createUserDto);
+  create(@Body() body: any) {
+    const { kitchenIds, ...createUserDto } = body;
+    return this.usersService.create(createUserDto, kitchenIds);
   }
 
   @Get()
@@ -27,8 +28,9 @@ export class UsersController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: Prisma.UserUpdateInput) {
-    return this.usersService.update(+id, updateUserDto);
+  update(@Param('id') id: string, @Body() body: any) {
+    const { kitchenIds, ...updateUserDto } = body;
+    return this.usersService.update(+id, updateUserDto, kitchenIds);
   }
 
   @Delete(':id')

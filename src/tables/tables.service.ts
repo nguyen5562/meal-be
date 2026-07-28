@@ -14,9 +14,18 @@ export class TablesService {
     });
   }
 
-  findAll(kitchenId?: number): Promise<Table[]> {
+  findAll(kitchenId?: number, user?: any): Promise<Table[]> {
+    const whereClause: any = {};
+    if (kitchenId) {
+      whereClause.kitchenId = kitchenId;
+    }
+    if (user && user.role === 'MANAGER') {
+      whereClause.kitchen = { managerKitchens: { some: { userId: user.sub } } };
+    }
+    
     return this.prisma.table.findMany({
-      where: kitchenId ? { kitchenId } : undefined,
+      where: Object.keys(whereClause).length > 0 ? whereClause : undefined,
+      include: { kitchen: true }
     });
   }
 

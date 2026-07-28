@@ -27,8 +27,8 @@ let KitchensController = class KitchensController {
     create(createKitchenDto) {
         return this.kitchensService.create(createKitchenDto);
     }
-    findAll() {
-        return this.kitchensService.findAll();
+    findAll(req) {
+        return this.kitchensService.findAll(req.user);
     }
     findOne(id) {
         return this.kitchensService.findOne(+id);
@@ -52,8 +52,9 @@ __decorate([
 __decorate([
     (0, roles_decorator_1.Roles)('ADMIN', 'MANAGER'),
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], KitchensController.prototype, "findAll", null);
 __decorate([

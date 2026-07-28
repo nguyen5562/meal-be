@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
 import { KitchensService } from './kitchens.service';
 import { Prisma } from '@prisma/client';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -18,8 +18,8 @@ export class KitchensController {
 
   @Roles('ADMIN', 'MANAGER')
   @Get()
-  findAll() {
-    return this.kitchensService.findAll();
+  findAll(@Request() req: any) {
+    return this.kitchensService.findAll(req.user);
   }
 
   @Roles('ADMIN', 'MANAGER')

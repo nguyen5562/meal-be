@@ -1,14 +1,14 @@
 import { UsersService } from './users.service';
-import { Prisma } from '@prisma/client';
 export declare class UsersController {
     private readonly usersService;
     constructor(usersService: UsersService);
-    create(createUserDto: Prisma.UserCreateInput): Promise<{
+    create(body: any): Promise<{
         id: number;
         username: string;
         password: string;
         fullName: string;
         role: import("@prisma/client").$Enums.Role;
+        isActive: boolean;
         telegramChatId: string | null;
         createdAt: Date;
     }>;
@@ -17,8 +17,15 @@ export declare class UsersController {
         username: string;
         fullName: string;
         role: import("@prisma/client").$Enums.Role;
+        isActive: boolean;
         telegramChatId: string | null;
         createdAt: Date;
+        managerKitchens: {
+            kitchen: {
+                name: string;
+                id: number;
+            };
+        }[];
     }[]>;
     findOne(id: string): Promise<{
         id: number;
@@ -26,15 +33,17 @@ export declare class UsersController {
         password: string;
         fullName: string;
         role: import("@prisma/client").$Enums.Role;
+        isActive: boolean;
         telegramChatId: string | null;
         createdAt: Date;
     } | null>;
-    update(id: string, updateUserDto: Prisma.UserUpdateInput): Promise<{
+    update(id: string, body: any): Promise<{
         id: number;
         username: string;
         password: string;
         fullName: string;
         role: import("@prisma/client").$Enums.Role;
+        isActive: boolean;
         telegramChatId: string | null;
         createdAt: Date;
     }>;
@@ -44,6 +53,7 @@ export declare class UsersController {
         password: string;
         fullName: string;
         role: import("@prisma/client").$Enums.Role;
+        isActive: boolean;
         telegramChatId: string | null;
         createdAt: Date;
     }>;

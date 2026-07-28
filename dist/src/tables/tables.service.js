@@ -24,9 +24,17 @@ let TablesService = class TablesService {
             data: { ...data, qrToken },
         });
     }
-    findAll(kitchenId) {
+    findAll(kitchenId, user) {
+        const whereClause = {};
+        if (kitchenId) {
+            whereClause.kitchenId = kitchenId;
+        }
+        if (user && user.role === 'MANAGER') {
+            whereClause.kitchen = { managerKitchens: { some: { userId: user.sub } } };
+        }
         return this.prisma.table.findMany({
-            where: kitchenId ? { kitchenId } : undefined,
+            where: Object.keys(whereClause).length > 0 ? whereClause : undefined,
+            include: { kitchen: true }
         });
     }
     findOne(id) {

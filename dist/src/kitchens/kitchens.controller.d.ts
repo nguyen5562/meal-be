@@ -9,7 +9,7 @@ export declare class KitchensController {
         location: string | null;
         isActive: boolean;
     }>;
-    findAll(): Promise<{
+    findAll(req: any): Promise<{
         name: string;
         id: number;
         location: string | null;

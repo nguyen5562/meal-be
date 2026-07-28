@@ -9,13 +9,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TelegramModule = void 0;
 const common_1 = require("@nestjs/common");
 const telegram_service_1 = require("./telegram.service");
+const nestjs_telegraf_1 = require("nestjs-telegraf");
+const config_1 = require("@nestjs/config");
+const telegram_update_1 = require("./telegram.update");
+const telegram_controller_1 = require("./telegram.controller");
+const prisma_module_1 = require("../prisma/prisma.module");
 let TelegramModule = class TelegramModule {
 };
 exports.TelegramModule = TelegramModule;
 exports.TelegramModule = TelegramModule = __decorate([
     (0, common_1.Global)(),
     (0, common_1.Module)({
-        providers: [telegram_service_1.TelegramService],
+        imports: [
+            prisma_module_1.PrismaModule,
+            config_1.ConfigModule,
+            nestjs_telegraf_1.TelegrafModule.forRootAsync({
+                imports: [config_1.ConfigModule],
+                useFactory: (configService) => ({
+                    token: configService.get('TELEGRAM_BOT_TOKEN') || '',
+                }),
+                inject: [config_1.ConfigService],
+            }),
+        ],
+        controllers: [telegram_controller_1.TelegramController],
+        providers: [telegram_service_1.TelegramService, telegram_update_1.TelegramUpdate],
         exports: [telegram_service_1.TelegramService],
     })
 ], TelegramModule);

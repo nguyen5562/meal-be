@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, Request } from '@nestjs/common';
 import { TablesService } from './tables.service';
 import { Prisma } from '@prisma/client';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -24,8 +24,8 @@ export class TablesController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN', 'MANAGER')
   @Get()
-  findAll(@Query('kitchenId') kitchenId?: string) {
-    return this.tablesService.findAll(kitchenId ? +kitchenId : undefined);
+  findAll(@Query('kitchenId') kitchenId: string | undefined, @Request() req: any) {
+    return this.tablesService.findAll(kitchenId ? +kitchenId : undefined, req.user);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

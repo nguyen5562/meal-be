@@ -20,7 +20,12 @@ let KitchensService = class KitchensService {
     create(data) {
         return this.prisma.kitchen.create({ data });
     }
-    findAll() {
+    findAll(user) {
+        if (user && user.role === 'MANAGER') {
+            return this.prisma.kitchen.findMany({
+                where: { managerKitchens: { some: { userId: user.sub } } }
+            });
+        }
         return this.prisma.kitchen.findMany();
     }
     findOne(id) {

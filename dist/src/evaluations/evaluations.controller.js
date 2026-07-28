@@ -27,8 +27,8 @@ let EvaluationsController = class EvaluationsController {
     create(createEvaluationDto) {
         return this.evaluationsService.create(createEvaluationDto);
     }
-    findAll(tableId) {
-        return this.evaluationsService.findAll(tableId ? +tableId : undefined);
+    findAll(tableId, req) {
+        return this.evaluationsService.findAll(tableId ? +tableId : undefined, req.user);
     }
     findOne(id) {
         return this.evaluationsService.findOne(+id);
@@ -50,8 +50,9 @@ __decorate([
     (0, roles_decorator_1.Roles)('ADMIN', 'MANAGER'),
     (0, common_1.Get)(),
     __param(0, (0, common_1.Query)('tableId')),
+    __param(1, (0, common_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", void 0)
 ], EvaluationsController.prototype, "findAll", null);
 __decorate([
