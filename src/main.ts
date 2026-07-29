@@ -10,8 +10,6 @@ async function bootstrap() {
       'https://meal.nguyenkhoi.io.vn',
     ],
   });
-  console.log(process.env.PORT);
-  console.log(process.env.DATABASE_URL);
   await app.listen(process.env.PORT || 4000);
 }
 bootstrap();
