@@ -18,8 +18,24 @@ export class EvaluationsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN', 'MANAGER')
   @Get()
-  findAll(@Query('tableId') tableId: string | undefined, @Request() req: any) {
-    return this.evaluationsService.findAll(tableId ? +tableId : undefined, req.user);
+  findAll(
+    @Query('tableId') tableId: string | undefined,
+    @Query('kitchenId') kitchenId: string | undefined,
+    @Query('startDate') startDate: string | undefined,
+    @Query('endDate') endDate: string | undefined,
+    @Query('page') page: string | undefined,
+    @Query('limit') limit: string | undefined,
+    @Request() req: any
+  ) {
+    return this.evaluationsService.findAll({
+      tableId: tableId ? +tableId : undefined,
+      kitchenId: kitchenId ? +kitchenId : undefined,
+      startDate,
+      endDate,
+      page: page ? +page : undefined,
+      limit: limit ? +limit : undefined,
+      user: req.user
+    });
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

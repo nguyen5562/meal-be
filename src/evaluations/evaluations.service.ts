@@ -57,19 +57,71 @@ export class EvaluationsService {
     return evaluation;
   }
 
-  findAll(tableId?: number, user?: any): Promise<Evaluation[]> {
-    const whereClause: any = {};
+  async findAll(params: {
+    tableId?: number;
+    kitchenId?: number;
+    startDate?: string;
+    endDate?: string;
+    page?: number;
+    limit?: number;
+    user?: any;
+  }): Promise<any> {
+    const { tableId, kitchenId, startDate, endDate, page, limit, user } = params;
+    const whereClause: Prisma.EvaluationWhereInput = {};
+    
     if (tableId) {
       whereClause.tableId = tableId;
-    }
-    if (user && user.role === 'MANAGER') {
-      whereClause.table = { kitchen: { managerKitchens: { some: { userId: user.sub } } } };
+    } else if (kitchenId) {
+      whereClause.table = { kitchenId };
     }
 
-    return this.prisma.evaluation.findMany({
-      where: Object.keys(whereClause).length > 0 ? whereClause : undefined,
-      include: { table: true }
-    });
+    if (user && user.role === 'MANAGER') {
+      whereClause.table = {
+        ...((whereClause.table as any) || {}),
+        kitchen: { managerKitchens: { some: { userId: user.sub } } }
+      };
+    }
+
+    if (startDate || endDate) {
+      whereClause.createdAt = {};
+      if (startDate) {
+        whereClause.createdAt.gte = new Date(startDate);
+      }
+      if (endDate) {
+        whereClause.createdAt.lte = new Date(endDate);
+      }
+    }
+
+    // Pagination logic
+    const isPaginated = page && limit;
+    const skip = isPaginated ? (page - 1) * limit : undefined;
+    const take = isPaginated ? limit : undefined;
+
+    // Fetch data and calculate stats
+    const [data, total, fiveStarCount] = await Promise.all([
+      this.prisma.evaluation.findMany({
+        where: whereClause,
+        include: { table: true },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take,
+      }),
+      this.prisma.evaluation.count({ where: whereClause }),
+      this.prisma.evaluation.count({
+        where: { ...whereClause, rating: 5 }
+      })
+    ]);
+
+    return {
+      data,
+      meta: {
+        total,
+        fiveStarCount,
+        page: page || 1,
+        limit: limit || total,
+        totalPages: limit ? Math.ceil(total / limit) : 1
+      }
+    };
   }
 
   findOne(id: number): Promise<Evaluation | null> {
